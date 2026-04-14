@@ -1,0 +1,14 @@
+streamlit==1.56.0
+youtube-transcript-api==1.2.4
+
+langchain==1.2.15
+langchain-core==1.2.26
+langchain-community==0.4.1
+langchain-openai==1.1.12
+langchain-text-splitters==1.1.1
+
+faiss-cpu==1.13.2
+
+openai==2.30.0
+python-dotenv==1.2.2
+tiktoken==0.12.0
