@@ -33,11 +33,19 @@ def extract_video_id(url):
 
 
 
-def get_transcript(video_id, language):
-    try:
-        api = YouTubeTranscriptApi()
-        transcript_list = api.list(video_id)
+import os
 
+def get_transcript(video_id, language="en"):
+    try:
+        # cookies file path
+        cookies_path = os.path.join(os.getcwd(), "cookies.txt")
+
+        api = YouTubeTranscriptApi()
+
+        # transcript list with cookies
+        transcript_list = api.list(video_id, cookies=cookies_path)
+
+        # Language handling
         try:
             if language == "auto":
                 transcript = list(transcript_list)[0]
@@ -46,18 +54,22 @@ def get_transcript(video_id, language):
         except NoTranscriptFound:
             transcript = list(transcript_list)[0]
 
+        # Fetch transcript (with cookies)
         fetched = transcript.fetch()
 
-        
-        full_text = " ".join([chunk.text for chunk in fetched])
+        # Extract text safely
+        full_text = " ".join([chunk['text'] for chunk in fetched])
 
         return full_text
 
     except TranscriptsDisabled:
-        raise Exception("❌ Captions are disabled")
+        return "❌ Transcripts are disabled for this video"
+
+    except NoTranscriptFound:
+        return "❌ No transcript found in given language"
 
     except Exception as e:
-        raise Exception(f"Transcript Error: {str(e)}")
+        return f"❌ Error: {str(e)}"
 
 
 
